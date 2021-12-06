@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta  name="description" content="CSC 212 Fractals">
+        <link rel="stylesheet" href="style.css">
+
+            <title>Recursive Fractals</title>
+
+    </head>
+
+    <body>
+
+    <header>
+        <nav>
+            <div class="fractalTitle">
+                <h1>Fractal Visualizer</h1>
+            </div>
+            <ul class="nav-links">
+				<li>
+                    <a href="Fractals.html">Visualizer</a>
+                </li>
+                <li>
+                    <a href="">GitHub</a>
+                </li>
+                <li>
+                    <a href="armada.html">Armada</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+ <body>
+    <p align="center">
+	<!--This draws the Canvas on the webpage -->
+      <canvas id="mycanvas"></canvas>
+    </p>
+ </body>
+
+ <!-- Run all the JavaScript stuff -->
+ <!-- Include the processing.js library -->
+ <!-- See https://khanacademy.zendesk.com/hc/en-us/articles/202260404-What-parts-of-ProcessingJS-does-Khan-Academy-support- for differences -->
+ <script src="https://cdn.jsdelivr.net/processing.js/1.4.8/processing.min.js"></script>
+
+ <script>
+    var sketchProc = function(processingInstance) {
+     with (processingInstance) {
+        size(400, 400);
+        frameRate(30);
+
+        // ProgramCodeGoesHere
+var Scene = 0;
+var playerChosen = 0;
+var shots= [];
+var lives = 3;
+var totalAliens = 30;
+var reload=millis();
+var input=[];
+
+var drawluis = function(luisx,luisy,luish,shoulderColor){
+      noStroke();
+fill(235, 158, 120);
+rect(luisx+(86*luish/100)-50,luisy+(29*luish/100),(28*luish/100),(22*luish/100),95); //neck
+ellipse(luisx+(100*luish/100)-50,luisy-(0*luish/100),(74*luish/100),(87*luish/100)); //head
+arc(luisx+(137*luish/100)-50,luisy-(5*luish/100), (15*luish/100),(27*luish/100), 270, 450 ); //right ear
+   arc(luisx+(65*luish/100)-50,luisy-(5*luish/100),(20*luish/100),(30*luish/100), 90, 270 ); //left ear
+fill(shoulderColor);
+arc (luisx+(63*luish/100)-50,luisy+(37*luish/100),(28*luish/100),(55*luish/100),0,361); //left face arc
+arc (luisx+(135*luish/100)-50,luisy+(35*luish/100),(28*luish/100),(55*luish/100),0,361); //right face arc
+fill(20, 18, 18);
+ellipse(luisx+(79*luish/100)-50,luisy-(6*luish/100),(10*luish/100),(13*luish/100)); //left eye
+ellipse(luisx+(117*luish/100)-50,luisy-(6*luish/100),(10*luish/100),(13*luish/100)); //right eye
+fill(247, 239, 239);
+arc(luisx+(98*luish/100)-50,luisy+(25*luish/100),(30*luish/100),(13*luish/100),1,180); //mouth
+fill(122,54,9);
+ellipse(luisx+(65*luish/100)-50,luisy-(11*luish/100),(11*luish/100),(39*luish/100)); //left piece of hair
+fill(122,54,9);
+ellipse(luisx+(134*luish/100)-50,luisy-(15*luish/100),(11*luish/100),(39*luish/100)); //right piece of hair
+fill(122, 54, 9);
+ellipse(luisx+(99*luish/100)-50,luisy-(35*luish/100),(75*luish/100),(33*luish/100)); //middle hair
+fill(255, 0, 0);
+quad((luisx-50)+(128*luish/100),luisy+(46*luish/100),(luisx-50)+(145*luish/100),luisy+(165*luish/100),(luisx-50)+(62*luish/100),luisy+(165*luish/100),(luisx-50)+(75*luish/100),luisy+(47*luish/100)); // body
+ fill(0, 162, 255);
+ textSize(41*luish/100);
+  text("LM",(luisx-50)+(72*luish/100),luisy+(100*luish/100)); // initials
+noFill();
+stroke(0);
+ arc((luisx-50)+(117*luish/100),luisy+(7*luish/100), (30*luish/100), (49*luish/100), 233,305); //right eyebrow
+ arc((luisx-50)+(79*luish/100), luisy+(7*luish/100), (30*luish/100),(49*luish/100),233,305); //left eyebrow
+     arc((luisx-50)+(99*luish/100), luisy-(9*luish/100), (44*luish/100), (50*luish/100), 74, 107);  //nose
+
+
+
+};
+
+//function to draw Joey's Bitmoji
+var drawHead = function(headX,headY,headH,shoulderColor){
+     noStroke();
+    fill (255,224,189); //skin
+    ellipse (headX,headY,90*headH/100,100*headH/100); //head
+    fill(shoulderColor);
+    arc (headX+(32*headH/100), headY+(22*headH/100), 80*headH/100, 50*headH    /100, -40, 107);//rightchisel
+    arc (headX-(53*headH/100), headY+(38*headH/100), 50*headH/100, 50*headH    /100 , 286, 365);//leftchisel
+    arc (headX-(43*headH/100),headY+(30*headH/100),31*headH/100,36*headH/100    ,17,159);//shouldershaping
+
+    fill(255, 255, 255);
+    ellipse (headX+(20*headH/100),headY-(10*headH/100),15*headH/100,10*headH    /100);//righteyewhites
+    ellipse (headX-(20*headH/100),headY-(10*headH/100),15*headH/100,10*headH    /100);//lefteyewhites
+    fill(11, 77, 13);
+    ellipse (headX+(20*headH/100),headY-(10*headH/100),5*headH/100,5*headH    /100);//righteye
+    ellipse (headX-(20*headH/100),headY-(10*headH/100),5*headH/100,5*headH    /100);//lefteye
+
+    fill(141,074,067);
+    quad(headX-(52*headH/100),headY-(5*headH/100),headX-(20*headH/100),headY    -(58*headH/100),  headX+(20*headH/100),headY-(15*headH/100),headX,headY      -(25*headH/100));//hairleft
+    quad(headX+(19*headH/100),headY-(15*headH/100),headX-(21*headH/100),headY    -(57*headH/100),  headX+(40*headH/100),headY-(50*headH/100),headX+(50        *headH/100),headY);//hairright
+
+
+    fill(214, 94, 94);
+    arc (headX+(2*headH/100), headY+(19*headH/100), 30*headH/100, 20*headH    /100, 0, 180);//mouth
+    fill(255, 255, 255);
+    rect (headX-(13*headH/100),headY+(17*headH/100),30*headH/100,4*headH/100    );//teeth
+
+    fill(0, 0, 0);
+    arc (headX+(4*headH/100), headY-(34*headH/100), 80*headH/100,80*headH/100    , 180, 360);//beanie
+
+    stroke(0, 0, 0);
+    fill(255,224,189);
+    arc(headX-(6*headH/100),headY+(7*headH/100),37*headH/100,18*headH/100,270    ,394); //nose
+
+};
+var drawBody = function (bodyX,bodyY,bodyH,shoulderColor){
+
+    noStroke();
+
+    fill (94, 94, 94);
+    rect (bodyX+-(48*bodyH/100),bodyY+(40*bodyH/100),97*bodyH/100,50*bodyH       /100);//shirt
+    stroke(104, 35, 194);
+    strokeWeight(5);
+    fill(94, 94, 94);
+    arc(bodyX-(23*bodyH/100),bodyY+(57*bodyH/100),41*bodyH/100,44*bodyH/100      ,83,115);//J arc
+    line (bodyX-(31*bodyH/100), bodyY+(55*bodyH/100), bodyX-(10*bodyH/100        ),bodyY+(55*bodyH/100));//J row
+    line (bodyX-(20*bodyH/100), bodyY+(58*bodyH/100), bodyX-(20*bodyH/100        ),bodyY+(74*bodyH/100));//J column
+
+    arc(bodyX+(8*bodyH/100),bodyY+(62*bodyH/100),25*bodyH/100,12*bodyH/100       ,270,450);//upper B arc
+    arc(bodyX+(8*bodyH/100),bodyY+(77*bodyH/100),25*bodyH/100,12*bodyH/100       ,270,450);//lower B arc
+    line(bodyX+(7*bodyH/100),bodyY+(56*bodyH/100),bodyX+(8*bodyH/100),bodyY      +(80*bodyH/100));//B column
+    strokeWeight(1);
+};
+var drawBitmoji = function (bitX,bitY,bitH,shoulderColor){
+
+    drawBody(bitX,bitY,bitH,shoulderColor);
+    drawHead(bitX,bitY,bitH,shoulderColor);
+
+};
+
+
+//function for standard UFO
+var drawUFO = function(x,y,h)
+{
+    fill(54, 208, 255);//color for window
+    arc(x+(100*h/100),y+(100*h/100),70*(h/100),(74*h/100),-180,1);//window
+    fill(102, 91, 91);//color for body of UFO spaceship
+    ellipse(x+(100*h/100),y+(115*h/100),192*(h/100),44*(h/100));//body of UFO spaceship
+    fill(136, 255, 0);//color for UFO lights
+    ellipse(x+(42*h/100),y+(115*h/100),20*(h/100),20*(h/100));// (left) light
+    ellipse(x+(97*h/100),y+(115*h/100),20*(h/100),20*(h/100));// (middle) light
+    ellipse(x+(154*h/100),y+(115*h/100),20*(h/100),20*(h/100));//(right) light
+};
+
+//function for boss UFO
+var bossAlien = function(x,y,h){
+    stroke(227, 61, 208);
+    line(x+(98*h/100),y+(4*h/100),x-(25*h/100),y-(74*h/100));//left antena
+    line(x+(108*h/100),y+(5*h/100),x+(221*h/100),y-(72*h/100));//right antena
+    stroke(0, 0, 0);
+    fill(252, 33, 252);//antena colors
+    ellipse(x-(34*h/100),y-(77*h/100),20*(h/100),20*h/100);//left earball
+    ellipse(x+(227*h/100),y-(77*h/100),20*(h/100),20*h/100);//right earball
+    fill(23, 214, 144);//alien color
+    ellipse(x+(100*h/100),y+(32*h/100),147*h/100,201*h/100);//alien head
+    fill(102, 102, 102);//UFO body color
+    ellipse(x+(104*h/100),y+(137*h/100),300*(h/100),84*h/100);//UFO body
+    fill(0, 0, 0);//alien eye color
+    ellipse(x+(61*h/100),y+(7*h/100),43*h/100,20*h/100);//left eye
+    ellipse(x+(135*h/100),y+(7*h/100),43*(h/100),20*h/100);//right eye
+    line(x+(49*h/100),y-(18*h/100),x+(87*h/100),y+(5*h/100));//left eyebrow
+    line(x+(149*h/100),y-(18*h/100),x+(111*h/100),y+(5*h/100));
+    fill(237, 31, 31);//mouth color
+    arc(x+(101*h/100),y+(72*h/100),110*(h/100),57*(h/100),140,400);//mouth arc
+    noStroke();
+    triangle(x+(60*h/100),y+(90*h/100),x+(101*h/100),y+(71*h/100),x+(144*h/100), y+(90*h/100));//mouth triangle(made to fill in the gap)
+    fill(136, 255, 0);//color for UFO lights
+    ellipse(x+(4*h/100),y+(134*h/100),40*(h/100),40*h/100);
+    ellipse(x+(100*h/100),y+(134*h/100),40*(h/100),40*(h/100));
+    ellipse(x+(191*h/100),y+(134*h/100),40*(h/100),40*(h/100));
+    fill(0, 196, 255);
+    ellipse(x+(103*h/100),y+(169*h/100),154*(h/100),20*(h/100));
+};
+
+
+//khan button class
+var Button = function(config) {
+    this.x = config.x || 0;
+    this.y = config.y || 0;
+    this.width = config.width || 150;
+    this.height = config.height || 50;
+    this.label = config.label || "Click";
+    this.onClick = config.onClick || function() {};
+};
+
+Button.prototype.draw = function() {
+    fill(0, 234, 255);
+    rect(this.x, this.y, this.width, this.height, 5);
+    fill(0, 0, 0);
+    textSize(19);
+    textAlign(LEFT, TOP);
+    text(this.label, this.x+10, this.y+this.height/4);
+};
+
+Button.prototype.isMouseInside = function() {
+    return mouseX > this.x &&
+           mouseX < (this.x + this.width) &&
+           mouseY > this.y &&
+           mouseY < (this.y + this.height);
+};
+
+Button.prototype.handleMouseClick = function() {
+    if (this.isMouseInside()) {
+        this.onClick();
+    }
+};
+
+var instructionsButton = new Button({
+    x: 209,
+    y: 210,
+    label:"   Instructions",
+    onClick: function()
+    {
+        Scene=1;
+    }
+
+});
+
+var playButton = new Button({
+    x: 25,
+    y: 210,
+    label:"        Play",
+    onClick: function()
+    {
+        Scene=2;
+    }
+
+});
+
+var backButton = new Button({
+    x: 200,
+    y: 300,
+    label:"Back",
+    onClick: function()
+    {
+       Scene =0;
+    }
+});
+
+var playJ = new Button ({
+    x: 40,
+    y: 283,
+    label: "  Play as Joey",
+    onClick: function()
+    {
+        playerChosen=2;
+        Scene=3;
+    }
+
+});
+
+var playL = new Button({
+    x: 215,
+    y: 283,
+    label:"  Play as Luis",
+    onClick: function()
+    {
+        playerChosen=1;
+       Scene=3;
+    }
+});
+
+//constructor function for projectiles object class(what bitmoji shoots)
+var Projectile = function(x,y){
+  this.x = x;
+  this.y = y;
+};
+
+//constructor function for bitmoji object class
+var Bitmoji = function(x, y,character) {
+    this.x = x;
+    this.y = y;
+    this.character = character;
+};
+
+//draw method for bitmoji object class
+Bitmoji.prototype.draw = function(chosenBitmoji) {
+    fill(255, 0, 0);
+    this.x = constrain(this.x, 40, 360);//restricts where you can move bitmoji on x-axis
+    this.character(this.x, this.y, 35, color(0, 187, 255));
+
+};
+
+//method for bitmoji object class to move left
+Bitmoji.prototype.moveLeft = function() {
+    this.x -= 3;//while being called, bitmoji's x value decreases (adjust integer for speed)
+};
+
+//method for bitmoji object class to move right
+Bitmoji.prototype.moveRight = function() {
+    this.x += 3;//while being called, bitmoji's x value increases (adjust integer for speed)
+};
+
+Bitmoji.prototype.shoot = function(){
+  var bulletY = this.y;//bulletY is set to y position of bitmoji while this is being called
+  var bulletX = this.x;//bulletX is set to x position of bitmoji while this is being called
+
+   /*sets global var reload to the millis while this is being called
+     (this is used to add a delay between shots*/
+   reload=millis();
+
+      /*pushes Projectile object to shots array equal to bulletY and bulletX(current bitmoji         postion)*/
+      shots.push (new Projectile(bulletX,bulletY));
+};
+
+
+
+
+
+var luisChosen = new Bitmoji(200,358,drawluis);//creates bitmoji object type w/ luisbitmoji
+var joeyChosen = new Bitmoji(200,358,drawBitmoji);//creates bitmoji object typew/joeybitmoji
+
+//constructor function for Bullet Alien object class
+var Alien = function(x,y){
+    this.x=x;
+    this.y=y;
+};
+
+Alien.prototype.draw = function() {
+   drawUFO(this.x, this.y, 30);
+};
+
+/*method for alien object type to check if a UFO has been hit*/
+Alien.prototype.checkForHit = function(bullet){
+    if (((this.y > bullet.y- 30)&& (this.y < bullet.y +30)) && (this.x > bullet.x - 55) &&(this.x < bullet.x+15)){
+
+        this.x= - 400;//removes both and bullet and UFO from visable canvas
+        bullet.x=-400;
+        //killed++;
+        //println(killed);
+
+    }
+};
+
+//method for the alien object type to decrease lives when UFO passes bitmoji
+Alien.prototype.loseLife = function(){
+    /*runs when the UFO is within the visable canvas
+      AND passes through the bottom
+      (shot ships dont count as they are moved off the visible canvas)*/
+  if ((this.x > 0 && this.x < 400) && this.y >400){
+
+  lives--;
+  this.x = - 400;//shifts ship off canvas to prevent multiple lives lost from a single ship
+  }
+};
+
+//empty array to fill with alien object types
+var alienArray = [];
+
+//for loop to fill alienArray with alien object types
+for (var i = 0; i < totalAliens; i++){
+    /*pushes new Alien object types at random range of x values 50 pixels apart*/
+    alienArray.push(new Alien(random(20, 360),(i * -50) - 50));
+}
+
+
+var splash = function()
+{
+    background(45, 53, 66);
+
+    //Creates the array of stars using for nested for loop
+    for (var i =0; i < 14; i++){
+        for (var j =0 ; j<10; j++){
+            frameRate(19);
+        drawUFO(i*random(0,222), j * random(0,328), 18);
+        }
+    }
+
+    textSize(55);
+    fill(212, 212, 38);
+    rect(13,17,378,55);//upper rect
+    rect(18,107,365,40);//lower rect
+    fill(49, 64, 56);
+    text("Armada",100,9);
+
+    textSize(20);
+
+    text("Invasion of recurive aliens",80,116);
+    instructionsButton.draw();
+    playButton.draw();
+    drawluis(313,306,49,color(45, 53, 66));
+};
+
+var instructions = function()
+{
+    background(207, 15, 217);
+    textSize(50);
+    text("How To Play",55,11);
+    textSize(17);
+    text("You will have the choice in picking one of the",35,80);
+    text("Bitmojis as playable characters:",55,99);
+     drawluis(240,130,28,color(207, 15, 217));
+    drawBitmoji(148,140,30,color(207, 15, 217));
+    textSize(17);
+    fill(0, 0, 0);
+    text("You must use your laser beams (by using UP key)",5,178);
+    text("to defeat the aliens that want to conquer Earth!!!",5,210);
+    drawUFO(155,220,30);
+    fill(0, 0, 0);
+    text("(to move, use: LEFT & RIGHT key)",50,269);
+
+    backButton.draw();
+};
+
+var characterSelect = function(){
+    background(45, 53, 66);
+    fill(230, 53, 53);
+    rect(59,20,312,49);
+    textSize(25);
+    fill(0, 0, 0);
+    text("Choose your Character!",76,31);
+
+    drawluis(290,194,45,color(45, 53, 66));//draws luis's bitmoji
+    drawBitmoji(114,225,50,color(45, 53, 66));//draw joey's bitmoji
+
+    playJ.draw();//draws button under joey
+    playL.draw();//draws button unde luis
+};
+
+//accepts character parameter to draw whichever bitmoji is chosen
+var gameScene = function(character){
+    background(0, 187, 255);
+    character.draw();
+    textSize(15);
+    fill(255, 255, 255);
+    text("Lives remaining: " + lives, 14, 25);
+
+    //for loop for drawing the array of aliens and moving them forward
+    for (i = 0; i< alienArray.length; i++){
+
+        /*if statement to draw the aliens when they are on the visable canvas only
+          (PREVENTS LAG)*/
+        if (alienArray[i].y > -50 && alienArray[i].y < 400){
+             alienArray[i].draw();//draws array of aliens
+        }
+
+        /*When the final alien has passed the end of the screen*/
+        if (alienArray[totalAliens-1].y > 400){
+            Scene=4;
+        }
+
+        alienArray[i].y ++;//moves them 1 y pixel forward for everytime in draw function
+        alienArray[i].loseLife();
+
+    }
+
+
+
+    //for loop to draw shots array and move them across canvas
+    for (i=0; i < shots.length; i++){
+
+        noStroke();
+        fill(255, 0, 0);//projectile color
+        //rect(shots[i].x, shots[i].y, 8, 20);//draws projectile array
+         triangle(shots[i].x-5,shots[i].y+70,shots[i].x-20,shots[i].y+(100),shots[i].x+10,shots[i].y+(100));
+        shots[i].y-=3;//decreases array by 2 x pixel each draw loop, moving shot across             canvas
+
+        //only checks for hits when a spaceship has spawned
+        if (shots[i].y > 0){
+            for (var k=0; k < alienArray.length; k++){
+            alienArray[k].checkForHit(shots[i]);
+            }
+        }
+    }
+
+};
+
+/*function that allows user to call moveleft/moveright/shoot methods via arrowkeys
+  chosenCharacter parameter decides which bitmoji is drawn*/
+var userControl = function(chosenCharacter){
+        gameScene(chosenCharacter);
+            if (input[LEFT]){//if the input array contains LEFT keyCode run this
+                chosenCharacter.moveLeft();
+            }
+            if (input[RIGHT]){//if the input array contains RIGHT keyCode run this
+                chosenCharacter.moveRight();
+            }
+            if (input[UP]){//if the input array contain UP keyCode run this
+
+                /*You can only shoot if 500ms has passed since your last shot to space out                  shots
+                Reload global var is updated by millis() each time shoot method is called*/
+                if (millis() - reload > 500){//integer determines fire rate in millisecs
+                chosenCharacter.shoot();
+                }
+
+            }
+};
+
+var gameOver = function(){
+    background(0, 0, 0);
+
+    /*nested for loop that draws random UFOs everywhere
+      (since function is in draw function it gives appearence that
+      UFOs are floating around earth)*/
+    for (var i =0; i < 14; i++){
+        for (var j =0 ; j<10; j++){
+        drawwUFO(i*random(0,221), j * random(0,49), 20);
+        }
+    }
+
+    noStroke();
+    fill(101, 107, 99);
+    rect(134,14,111,30);
+    rect(60,41,304,35);
+    textSize(23);
+    fill(203, 237, 12);
+    text("You Lose!",138,16);
+    text("the alien invasion has begun",65,44);
+    fill(46, 36, 191);
+    ellipse(200,249,175,175);//earth water bits
+    fill(19, 143, 13);
+    ellipse(142,254,62,85);//earth land bits
+    ellipse(163,230,94,79);
+    arc(274,200,100,50,79,243);
+    arc(276,297,100,50,121,281);
+
+    bossAlien(180,99,24);
+
+};
+
+var victoryScreen = function(){
+  background(0, 0, 0);
+  noStroke();
+  fill(101, 107, 99);
+  textSize(23);
+  rect(125,23,111,30);
+  rect(37,41,321,42);
+  fill(14, 235, 14);
+  text("Victory!",142,28);
+  text("the aliens have been defeated",40,57);
+
+  drawluis(99,168,38,color(0, 0, 0));
+  drawBitmoji(89,236,38,color(0, 0, 0));
+
+   //for loop to draw several ufos
+   for (var i =0; i<10 ;i++){
+       drawUFO(253,i*25+100,50);
+   }
+
+   bossAlien(211,200,28);
+   //for loop for randomize a bunch of khan leaves(gives fire effect)
+   for (var i =0; i<13; i++){
+   image(getImage("avatars/leaf-red"),random(0,50)+248,random(0,212)+114,50,43);
+   image(getImage("avatars/leaf-orange"),random(0,50)+240,random(0,212)+150,50,43);
+   }
+   fill(46, 36, 191);
+   ellipse(1,140,78,150);//earth sphere
+   fill(14, 235, 14);
+   arc(-9,95,71,57,248,464);//earth green bits
+   arc(-10,143,71,57,248,464);
+
+};
+
+///If statements in mousereleased to restrict clickable areas only to relevent scene
+mouseReleased  = function(){
+    if (Scene ===0){
+    instructionsButton.handleMouseClick();
+    playButton.handleMouseClick();
+    }
+    if (Scene ===1){
+    backButton.handleMouseClick();
+    }
+
+};
+
+//mouseclicked function added to prevent a single mouseRelease from effecting multiple scenes
+mouseClicked = function(){
+     if (Scene ===2){
+    playJ.handleMouseClick();
+    playL.handleMouseClick();
+    }
+
+};
+
+/*When a key is pressed, that keycode is added the the input array with a true boolean
+  (this allows multiple key functionality)*/
+keyPressed=function(){
+   input[keyCode]=true;
+};
+
+/*When a key is released, the input array is updated to give that keyCode a false boolean
+  as the user is no longer pressing it*/
+keyReleased=function(){
+    input[keyCode]=false;
+};
+
+draw = function() {
+    if(Scene===0){
+        splash();
+    }
+
+    if(Scene===1){
+        instructions();
+    }
+
+    if(Scene===2){
+        characterSelect();
+    }
+
+    if(Scene===3){
+
+        //calls userControl function with a different Bitmoji object depending on who is            chosen
+        if (playerChosen===1){
+            userControl(luisChosen);
+        }
+    }
+        if (playerChosen ===2){
+            userControl(joeyChosen);
+        }
+
+    if (Scene===4){
+        frameRate(10);
+        victoryScreen();
+    }
+
+    //called when player runs out of lives
+    if (lives <= 0){
+        frameRate(1);//frame rate set to 1 for alien background array to randomize once per                         second
+        gameOver();
+    }
+
+
+};
+
+
+    }};
+
+    // Get the canvas that Processing-js will use
+    var canvas = document.getElementById("mycanvas");
+    // Pass the function sketchProc (defined in myCode.js) to Processing's constructor.
+    var processingInstance = new Processing(canvas, sketchProc);
+ </script>
+
+</html>

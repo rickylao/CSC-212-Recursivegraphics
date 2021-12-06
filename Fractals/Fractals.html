@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta  name="description" content="CSC 212 - Recursive Graphics">
+        <meta name="author" content="Ricky Lao, Larry Khun, Luis Medrano">
+        <link rel="stylesheet" href="style.css">
+
+            <title>Recursive Fractals</title>
+
+    </head>
+
+    <body>
+
+        <header>
+
+            <!--Main nav bar-->
+            <nav>
+
+                <!--Title of the page-->
+                <div class="fractalTitle">
+                    <h1>Fractal Visualizer</h1>
+                </div>
+
+                <!--Links in the nav bar as a ul-->
+                <ul class="nav-links">
+    				<li>
+                        <a href="Fractals.html">Visualizer</a>
+                    </li>
+                    <li>
+                        <a href="">GitHub</a>
+                    </li>
+                    <li>
+                        <a href="armada.html">Armada</a>
+                    </li>
+                </ul>
+
+            </nav>
+        </header>
+
+    <main>
+
+        <!--Main content of page as one overarching div-->
+        <div class="container">
+            <!--Slider, buttons, and output text as a div-->
+            <div class="main_control_center">
+
+                <h3>Performing: <span id="currentfractal"></h3>
+
+                <div class="sliderContainer">
+                    <input type="range" min="0" max="10" value="0" class="slider" id="valueslider">
+                    <p>Level: <span id="outputrange"></span></p>
+                </div>
+
+                <div class="buttonarray">
+                    <button onclick="chooseSierpinski()" type="button">Sierpinski</button>
+                    <button onclick="chooseHilbert()" type="button">Hilbert Curve</button>
+                    <button onclick="chooseKoch()" type="button">Koch Snowflake</button>
+                    <button onclick="reset()" type="button">Reset</button>
+                </div>
+
+                <div class="howitworksbox">
+                    <p>
+                        <span id="howitworks">
+                    </p>
+                </div>
+
+            </div>
+
+            <!--Canvas as a div-->
+            <div class="viewport">
+              <canvas id="canvas"></canvas>
+            </div>
+
+        </div>
+
+	<script src="script.js"></script>
+
+    </main>
+
+    </body>
+
+</html>
