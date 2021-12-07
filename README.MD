@@ -7,6 +7,6 @@ Fractal visualizer provides an intuitive vizualizer of the Sierpinski's Triangle
 Simply access the github.io link to deploy the website to your machine.
 
 ###### Authors
-Larry Khun
-Luis Medrano
+Larry Khun  
+Luis Medrano  
 Ricky Lao
