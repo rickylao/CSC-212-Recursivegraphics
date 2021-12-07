@@ -81,6 +81,12 @@
 			divide(width/2, height/2, triangle_length, '#C4F1BE', levels);
 		};
 
+		//Rotation function used to rotate direction of line path for Hilbert and for Koch
+		function rotation(degree) {
+		ctx.rotate(degree*Math.PI/180);
+		}
+
+
 	//Hilbert's Curve functions
 
 		//function to draw a u shape with 3 lines - base case
@@ -110,8 +116,6 @@
 		  ctx.translate(length, 0);
 
 		  rotation(angle);
-
-
 		}
 
 
@@ -186,59 +190,55 @@
 
 	//Koch's Snowflake functions
 
-	//function to draw line - base case
-	function drawlen(distance) {
-	  ctx.strokeStyle = '#C4F1BE';
-	  ctx.lineWidth = 3;
-	  ctx.beginPath();
-	  ctx.moveTo(0,0);
-	  ctx.lineTo(distance, 0);
-	  ctx.stroke();
+		//function to draw line - base case
+		function drawlen(distance) {
+		  ctx.strokeStyle = '#C4F1BE';
+		  ctx.lineWidth = 3;
+		  ctx.beginPath();
+		  ctx.moveTo(0,0);
+		  ctx.lineTo(distance, 0);
+		  ctx.stroke();
 
-	  //Move cursor to new point after drawing line
-	  ctx.translate(distance, 0);
-	}
+		  //Move cursor to new point after drawing line
+		  ctx.translate(distance, 0);
+		}
 
-	function rotation(degree) {
-	  ctx.rotate(degree*Math.PI/180);
-	}
+		  function snowflake_test(n, length) {
+			if(n <= 0) {
+			  drawlen(length);
 
-	  function snowflake_test(n, length) {
-		if(n <= 0) {
-		  drawlen(length);
+			} else {
 
-		} else {
+			snowflake_test(n - 1, length/3);
+			//Rotate counter clock wise
+			rotation(-60);
 
-		snowflake_test(n - 1, length/3);
-		//Rotate counter clock wise
-		rotation(-60);
+			snowflake_test(n - 1, length/3);
+			//Rotate clock wise
+			rotation(120);
 
-		snowflake_test(n - 1, length/3);
-		//Rotate clock wise
-		rotation(120);
+			snowflake_test(n - 1, length/3);
+			//Rotate counter clock wise
+			rotation(-60);
 
-		snowflake_test(n - 1, length/3);
-		//Rotate counter clock wise
-		rotation(-60);
+			snowflake_test(n - 1, length/3);
+		  }
+		  }
 
-		snowflake_test(n - 1, length/3);
-	  }
-	  }
-
-		//Function to draw Koch snowflake for slider
-		function kochSnowflake(levels){
-		  ctx.clearRect(0, 0, canvas.width, canvas.height);
-		  //Moves origin to the center of canvas, later on rotating around canvas
-		  ctx.translate((width-koch_length)/2, (height-(koch_length*Math.sqrt(3)/2)+(koch_length*Math.sqrt(3)/6))/2);
-		  //Create snowflake only creates one side, I need to rotate the drawing cursor to draw the other 3 sides.
-		  snowflake_test(levels, koch_length);
-		  rotation(120);
-		  snowflake_test(levels, koch_length);
-		  rotation(120);
-		  snowflake_test(levels, koch_length);
-		  //Reset rotation transformations
-			ctx.resetTransform();
-		};
+			//Function to draw Koch snowflake for slider
+			function kochSnowflake(levels){
+			  ctx.clearRect(0, 0, canvas.width, canvas.height);
+			  //Moves origin to the center of canvas, later on rotating around canvas
+			  ctx.translate((width-koch_length)/2, (height-(koch_length*Math.sqrt(3)/2)+(koch_length*Math.sqrt(3)/6))/2);
+			  //Create snowflake only creates one side, I need to rotate the drawing cursor to draw the other 3 sides.
+			  snowflake_test(levels, koch_length);
+			  rotation(120);
+			  snowflake_test(levels, koch_length);
+			  rotation(120);
+			  snowflake_test(levels, koch_length);
+			  //Reset rotation transformations
+				ctx.resetTransform();
+			};
 
 
 //Slider component
