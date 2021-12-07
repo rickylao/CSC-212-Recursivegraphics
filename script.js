@@ -45,7 +45,7 @@
 
 	//Sierpinki's triangle functions
 
-		//function to draw a triangle
+		//function to draw a triangle - base case
 		function drawTriangle(x, y, length, color) {
 			ctx.fillStyle = color;
 			ctx.beginPath();
@@ -83,7 +83,7 @@
 
 	//Hilbert's Curve functions
 
-		//function to draw a u shape with a line
+		//function to draw a u shape with 3 lines - base case
 		function drawLine(length, angle, color, linewidth) {
 		  ctx.strokeStyle = color;
 		  ctx.lineWidth = linewidth;
@@ -185,6 +185,8 @@
 
 
 	//Koch's Snowflake functions
+
+	//function to draw line - base case
 	function drawlen(distance) {
 	  ctx.strokeStyle = '#C4F1BE';
 	  ctx.lineWidth = 3;
