@@ -154,8 +154,7 @@ var drawBitmoji = function (bitX,bitY,bitH,shoulderColor){
 
 
 //function for standard UFO
-var drawUFO = function(x,y,h)
-{
+var drawUFO = function(x,y,h){
     fill(54, 208, 255);//color for window
     arc(x+(100*h/100),y+(100*h/100),70*(h/100),(74*h/100),-180,1);//window
     fill(102, 91, 91);//color for body of UFO spaceship
@@ -197,8 +196,14 @@ var bossAlien = function(x,y,h){
 };
 
 
+//sierpenki's triangle: recursive function:
+
+    var triangle_length = 40;
+
+
+
 //khan button class
-var Button = function(config) {
+var Button = function(config){
     this.x = config.x || 0;
     this.y = config.y || 0;
     this.width = config.width || 150;
@@ -207,7 +212,7 @@ var Button = function(config) {
     this.onClick = config.onClick || function() {};
 };
 
-Button.prototype.draw = function() {
+Button.prototype.draw = function(){
     fill(0, 234, 255);
     rect(this.x, this.y, this.width, this.height, 5);
     fill(0, 0, 0);
@@ -216,14 +221,14 @@ Button.prototype.draw = function() {
     text(this.label, this.x+10, this.y+this.height/4);
 };
 
-Button.prototype.isMouseInside = function() {
+Button.prototype.isMouseInside = function(){
     return mouseX > this.x &&
            mouseX < (this.x + this.width) &&
            mouseY > this.y &&
            mouseY < (this.y + this.height);
 };
 
-Button.prototype.handleMouseClick = function() {
+Button.prototype.handleMouseClick = function(){
     if (this.isMouseInside()) {
         this.onClick();
     }
@@ -323,9 +328,48 @@ Bitmoji.prototype.shoot = function(){
      (this is used to add a delay between shots*/
    reload=millis();
 
-      /*pushes Projectile object to shots array equal to bulletY and bulletX(current bitmoji         postion)*/
+      /*pushes Projectile object to shots array equal to bulletY and bulletX(current bitmoji postion)*/
       shots.push (new Projectile(bulletX,bulletY));
 };
+
+
+
+		//function to draw a triangle
+		function drawTriangle(x, y, length) {
+        noStroke();
+        
+        fill(255, 0, 0);//projectile color
+        triangle(x, y-length, x-length, y+length, x+length, y+length);
+
+		}
+
+		//Recursive function to divide the main triangle
+		//The first two parameters are the center points of each piece
+		function divide(x, y, length,copies){
+			if(copies > 0) {
+
+			   //Divides top piece
+				divide(x, y-(length/2), length/2, copies-1);
+
+				//Divides bottom left piece
+				divide(x-(length/2), y+(length/2), length/2,copies - 1);
+
+				//Divides bottom right piece
+				divide(x+(length/2), y+(length/2), length/2,copies - 1);
+			} else {
+			//After recursive functions finish dividing, draw the triangles at every center point
+			drawTriangle(x, y, length);
+			}
+		}
+
+		//Function call to draw Sierpinski for slider
+		var sierpinski = function(x, y, levels) {
+		    if(input[UP] == true){
+		        levels++;
+		    }
+			divide(x, y, triangle_length, 2);
+		    
+		};
 
 
 
@@ -381,9 +425,7 @@ for (var i = 0; i < totalAliens; i++){
 var splash = function()
 {
     background(45, 53, 66);
-
-    //Creates the array of stars using for nested for loop
-    for (var i =0; i < 14; i++){
+        for (var i =0; i < 14; i++){
         for (var j =0 ; j<10; j++){
             frameRate(19);
         drawUFO(i*random(0,222), j * random(0,328), 18);
@@ -475,9 +517,11 @@ var gameScene = function(character){
 
         noStroke();
         fill(255, 0, 0);//projectile color
-        //rect(shots[i].x, shots[i].y, 8, 20);//draws projectile array
-         triangle(shots[i].x-5,shots[i].y+70,shots[i].x-20,shots[i].y+(100),shots[i].x+10,shots[i].y+(100));
-        shots[i].y-=3;//decreases array by 2 x pixel each draw loop, moving shot across             canvas
+         shots[i].y-=3;
+        
+         sierpinski(shots[i].x, shots[i].y, 2);
+         
+        //shots[i].y-=3;//decreases array by 2 x pixel each draw loop, moving shot across             canvas
 
         //only checks for hits when a spaceship has spawned
         if (shots[i].y > 0){
@@ -503,10 +547,11 @@ var userControl = function(chosenCharacter){
 
                 /*You can only shoot if 500ms has passed since your last shot to space out                  shots
                 Reload global var is updated by millis() each time shoot method is called*/
+                //println(input[UP]);
+                
                 if (millis() - reload > 500){//integer determines fire rate in millisecs
                 chosenCharacter.shoot();
                 }
-
             }
 };
 
@@ -563,10 +608,6 @@ var victoryScreen = function(){
 
    bossAlien(211,200,28);
    //for loop for randomize a bunch of khan leaves(gives fire effect)
-   for (var i =0; i<13; i++){
-   image(getImage("avatars/leaf-red"),random(0,50)+248,random(0,212)+114,50,43);
-   image(getImage("avatars/leaf-orange"),random(0,50)+240,random(0,212)+150,50,43);
-   }
    fill(46, 36, 191);
    ellipse(1,140,78,150);//earth sphere
    fill(14, 235, 14);
