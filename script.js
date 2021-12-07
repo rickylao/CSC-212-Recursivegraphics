@@ -2,8 +2,6 @@
 	var whichfractal = 0;
 	var outputfractal = document.getElementById("currentfractal");
 	var howdisplay = document.getElementById("howitworks");
-	//Lime green, Purple, orange, yellow, crimson, white, black, brown, pinkish, navy
-	var recursiveLevelColors = ['#C4F1BE','#FF00F9','#FF7F00','#FFEC08','#C80000','#FFFFFF','#000000','#DA8A00','#FF2772','#2E167E'];
 	function chooseSierpinski() {
 		slider.value = 0;
 		outputfractal.innerHTML = "";
