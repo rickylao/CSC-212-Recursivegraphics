@@ -1,3 +1,6 @@
+import turtle             
+pen = turtle.Turtle()
+
 def draw_bucket(length, angle):
     pen.rt(angle)
     pen.fd(length)
