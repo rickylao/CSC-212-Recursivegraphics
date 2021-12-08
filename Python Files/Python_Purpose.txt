@@ -1,0 +1,2 @@
+The main reason to why I used Python is because with the turtle library it helped me visualize my functions as it drew the shapes based on the function. Turtle helped me
+understand why and how the algrothim worked and so allowed me to help explain it to my teammates to create the website. 
