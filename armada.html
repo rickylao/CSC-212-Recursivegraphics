@@ -45,7 +45,7 @@
     var sketchProc = function(processingInstance) {
      with (processingInstance) {
         size(400, 400);
-        frameRate(30);
+        //frameRate(50);
 
         // ProgramCodeGoesHere
 var Scene = 0;
@@ -266,26 +266,25 @@ var backButton = new Button({
     }
 });
 
-var playJ = new Button ({
-    x: 40,
-    y: 283,
-    label: "  Play as Joey",
-    onClick: function()
-    {
-        playerChosen=2;
-        Scene=3;
-    }
 
-});
 
 var playL = new Button({
-    x: 215,
+    x: 130,
     y: 283,
     label:"  Play as Luis",
     onClick: function()
     {
         playerChosen=1;
        Scene=3;
+    }
+});
+var secretButton = new Button({
+    x:100,
+    y:200,
+    label:"Do Not Press",
+    onClick: function(){
+        window.location.href = "https://youtu.be/dQw4w9WgXcQ";
+
     }
 });
 
@@ -337,7 +336,7 @@ Bitmoji.prototype.shoot = function(){
 		//function to draw a triangle
 		function drawTriangle(x, y, length) {
         noStroke();
-        
+
         fill(255, 0, 0);//projectile color
         triangle(x, y-length, x-length, y+length, x+length, y+length);
 
@@ -368,11 +367,87 @@ Bitmoji.prototype.shoot = function(){
 		        levels++;
 		    }
 			divide(x, y, triangle_length, 2);
-		    
+
 		};
 
+//Koch's Snowflake functions
+
+    var koch_length = 200;
+    function rotation(degree) {
+      rotate(degree*Math.PI/180);
+    }
+
+	function drawlen(distance) {
+	    fill(255,0,0);
+	  line(0,0, distance, 0);
+	  //Move cursor to new point after drawing line
+	  translate(distance, 0);
+	}
+
+	  function snowflake_test(n, lengt) {
+		if(n <= 0) {
+		  drawlen(lengt);
+
+		} else {
+
+		snowflake_test(n - 1, lengt/3);
+		//Rotate counter clock wise
+		rotation(-60);
+
+		snowflake_test(n - 1, lengt/3);
+		//Rotate clock wise
+		rotation(120);
+
+		snowflake_test(n - 1, lengt/3);
+		//Rotate counter clock wise
+		rotation(-60);
+
+		snowflake_test(n - 1, lengt/3);
+	  }
+	  }
 
 
+		//Function to draw Koch snowflake for slider
+		function kochSnowflake(levels){
+		  //Create snowflake only creates one side, I need to rotate the drawing cursor to draw the other 3 sides.
+		  translate(200, 200);
+		  snowflake_test(levels, koch_length);
+		  rotation(120);
+		  snowflake_test(levels, koch_length);
+		  rotation(120);
+		  snowflake_test(levels, koch_length);
+		  //Reset rotation transformations
+			resetMatrix();
+		};
+var hilbert_length = 100;
+
+function rotation(degree) {
+      rotate(degree*Math.PI/180);
+    }
+
+        //function to draw a u shape with a line
+        function drawLine(length, angle, color, linewidth) {
+          //Rotates "angle" degress clockwise
+          rotation(angle);
+          line(0, 0, length, 0);
+          translate(length, 0);
+
+
+          //Rotates "angle" degress counter-clockwise
+          rotation(-angle);
+          line(0, 0, length, 0);
+          translate(length, 0);
+
+
+          //Rotates "angle" degress counter-clockwise
+          rotation(-angle);
+          line(0, 0, length, 0);
+          translate(length, 0);
+
+          rotation(angle);
+
+
+        }
 
 
 var luisChosen = new Bitmoji(200,358,drawluis);//creates bitmoji object type w/ luisbitmoji
@@ -420,7 +495,16 @@ for (var i = 0; i < totalAliens; i++){
     /*pushes new Alien object types at random range of x values 50 pixels apart*/
     alienArray.push(new Alien(random(20, 360),(i * -50) - 50));
 }
+var Boss = function(x,y){
+    this.x = x;
+    this.y = y;
+};
+//prototype to draw the boss whever and wherever I'd want to
+Boss.prototype.draw = function() {
 
+    this.x = constrain(this.x, 40, 360);//restricts where you can move bitmoji on x-axis
+    bossAlien(this.x, this.y, 50);
+};
 
 var splash = function()
 {
@@ -441,10 +525,10 @@ var splash = function()
 
     textSize(20);
 
-    text("Invasion of recurive aliens",80,116);
+    text("Invasion of Recursive aliens",80,116);
     instructionsButton.draw();
     playButton.draw();
-    drawluis(313,306,49,color(45, 53, 66));
+    drawluis(200,306,49,color(45, 53, 66));
 };
 
 var instructions = function()
@@ -453,10 +537,9 @@ var instructions = function()
     textSize(50);
     text("How To Play",55,11);
     textSize(17);
-    text("You will have the choice in picking one of the",35,80);
-    text("Bitmojis as playable characters:",55,99);
+    text("You will play",35,80);
+    text("Bitmoji:",55,99);
      drawluis(240,130,28,color(207, 15, 217));
-    drawBitmoji(148,140,30,color(207, 15, 217));
     textSize(17);
     fill(0, 0, 0);
     text("You must use your laser beams (by using UP key)",5,178);
@@ -476,10 +559,7 @@ var characterSelect = function(){
     fill(0, 0, 0);
     text("Choose your Character!",76,31);
 
-    drawluis(290,194,45,color(45, 53, 66));//draws luis's bitmoji
-    drawBitmoji(114,225,50,color(45, 53, 66));//draw joey's bitmoji
-
-    playJ.draw();//draws button under joey
+    drawluis(200,194,45,color(45, 53, 66));//draws luis's bitmoji
     playL.draw();//draws button unde luis
 };
 
@@ -502,7 +582,7 @@ var gameScene = function(character){
 
         /*When the final alien has passed the end of the screen*/
         if (alienArray[totalAliens-1].y > 400){
-            Scene=4;
+            Scene=5;
         }
 
         alienArray[i].y ++;//moves them 1 y pixel forward for everytime in draw function
@@ -517,11 +597,51 @@ var gameScene = function(character){
 
         noStroke();
         fill(255, 0, 0);//projectile color
+        //rect(shots[i].x, shots[i].y, 8, 20);//draws projectile array
+      //  triangle(shots[i].x-5,shots[i].y+70,shots[i].x-20 ,shots[i].y+(100),shots[i].x+10,shots[i].y+(100));*/
          shots[i].y-=3;
-        
+
          sierpinski(shots[i].x, shots[i].y, 2);
-         
-        //shots[i].y-=3;//decreases array by 2 x pixel each draw loop, moving shot across             canvas
+
+
+
+        //only checks for hits when a spaceship has spawned
+        if (shots[i].y > 0){
+            for (var k=0; k < alienArray.length; k++){
+            alienArray[k].checkForHit(shots[i]);
+            }
+        }
+    }
+
+};
+//var evilBoss = new Boss(200,200,50);
+
+var finalBattle = function(character){
+    background(6, 88, 189);
+    character.draw();
+    evilBoss.draw();
+
+   //new Boss(200,200);
+   /*
+   if(evilBoss.x >0 && evilBoss.x <400){
+
+       evilBoss.x +=3;
+   }
+   else if(evilBoss.x=<400 && evilBoss.x >=0){
+       evilBoss.x -=3;
+   }
+   */
+
+
+    //for loop to draw shots array and move them across canvas
+    for (i=0; i < shots.length; i++){
+
+        noStroke();
+        fill(255, 0, 0);//projectile color
+
+         shots[i].y-=3;
+
+         sierpinski(shots[i].x, shots[i].y, 2);
 
         //only checks for hits when a spaceship has spawned
         if (shots[i].y > 0){
@@ -548,11 +668,30 @@ var userControl = function(chosenCharacter){
                 /*You can only shoot if 500ms has passed since your last shot to space out                  shots
                 Reload global var is updated by millis() each time shoot method is called*/
                 //println(input[UP]);
-                
+
                 if (millis() - reload > 500){//integer determines fire rate in millisecs
                 chosenCharacter.shoot();
                 }
             }
+};
+var userFinalControl = function(chosenCharacter){
+            finalBattle(chosenCharacter);
+            if (input[LEFT]){//if the input array contains LEFT keyCode run this
+                chosenCharacter.moveLeft();
+            }
+            if (input[RIGHT]){//if the input array contains RIGHT keyCode run this
+                chosenCharacter.moveRight();
+            }
+            if (input[UP]){//if the input array contain UP keyCode run this
+
+                /*You can only shoot if 500ms has passed since your last shot to space out                  shots
+                Reload global var is updated by millis() each time shoot method is called*/
+                if (millis() - reload > 500){//integer determines fire rate in millisecs
+                chosenCharacter.shoot();
+                }
+
+            }
+
 };
 
 var gameOver = function(){
@@ -563,7 +702,7 @@ var gameOver = function(){
       UFOs are floating around earth)*/
     for (var i =0; i < 14; i++){
         for (var j =0 ; j<10; j++){
-        drawwUFO(i*random(0,221), j * random(0,49), 20);
+        drawUFO(i*random(0,221), j * random(0,49), 20);
         }
     }
 
@@ -584,6 +723,7 @@ var gameOver = function(){
     arc(276,297,100,50,121,281);
 
     bossAlien(180,99,24);
+    secretButton.draw();
 
 };
 
@@ -599,7 +739,6 @@ var victoryScreen = function(){
   text("the aliens have been defeated",40,57);
 
   drawluis(99,168,38,color(0, 0, 0));
-  drawBitmoji(89,236,38,color(0, 0, 0));
 
    //for loop to draw several ufos
    for (var i =0; i<10 ;i++){
@@ -625,13 +764,16 @@ mouseReleased  = function(){
     if (Scene ===1){
     backButton.handleMouseClick();
     }
+    if(gameOver){
+        secretButton.handleMouseClick();
+    }
 
 };
 
 //mouseclicked function added to prevent a single mouseRelease from effecting multiple scenes
 mouseClicked = function(){
      if (Scene ===2){
-    playJ.handleMouseClick();
+    //playJ.handleMouseClick();
     playL.handleMouseClick();
     }
 
@@ -669,23 +811,24 @@ draw = function() {
             userControl(luisChosen);
         }
     }
-        if (playerChosen ===2){
-            userControl(joeyChosen);
-        }
+
 
     if (Scene===4){
+        userFinalControl(luisChosen);
+    }
+    if(Scene===5){
         frameRate(10);
         victoryScreen();
     }
 
     //called when player runs out of lives
     if (lives <= 0){
-        frameRate(1);//frame rate set to 1 for alien background array to randomize once per                         second
+        frameRate(10);//frame rate set to 1 for alien background array to randomize once per                         second
         gameOver();
     }
 
-
 };
+
 
 
     }};
