@@ -41,30 +41,28 @@
             </nav>
         </header>
 
-    <main>
+        <main>
 
-        <!--Main content of page as one overarching div-->
+
+            <!--Main content of page as one overarching div-->
         <div class="container">
             <!--Slider, buttons, and output text as a div-->
             <div class="main_control_center">
 
-                <h3>Performing: <span id="currentfractal"></h3>
+                <h3>Performing: Mandelbrot Set</h3>
 
                 <div class="sliderContainer">
-                    <input type="range" min="0" max="10" value="0" class="slider" id="valueslider">
-                    <p>Level: <span id="outputrange"></span></p>
+                    <input type="range" min="70" max="100" value="0" class="slider" id="mandelSlider">
+                    <p>Tolerance: <span id="mandelRange"></span></p>
                 </div>
 
                 <div class="buttonarray">
-                    <button onclick="chooseSierpinski()" type="button">Sierpinski</button>
-                    <button onclick="chooseHilbert()" type="button">Hilbert Curve</button>
-                    <button onclick="chooseKoch()" type="button">Koch Snowflake</button>
                     <button onclick="reset()" type="button">Reset</button>
                 </div>
 
                 <div class="howitworksbox">
                     <p>
-                        <span id="howitworks">
+                        A bonus fractal that is quite possible the most famous out there: The Mandelbrot Set.
                     </p>
                 </div>
 
@@ -72,15 +70,13 @@
 
             <!--Canvas as a div-->
             <div class="viewport">
-              <canvas id="canvas"></canvas>
+              <canvas id="theCanvas"></canvas>
             </div>
 
         </div>
 
-	<script src="script.js"></script>
+        </main>
 
-    </main>
-
+        <script src="mandelbrotscript.js"></script>
     </body>
-
 </html>
