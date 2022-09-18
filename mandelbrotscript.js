@@ -1,11 +1,12 @@
 var canvas = document.getElementById('theCanvas');
 const ctx = canvas.getContext('2d');
-//Create Canvas
+
 const width = window.innerWidth/2;
 const height = window.innerHeight/1.2;
 
 canvas.width = width;
 canvas.height = height;
+
 /* Wikipedia pseudocode
 for each pixel (Px, Py) on the screen do
     x0 := scaled x coordinate of pixel (scaled to lie in the Mandelbrot X scale (-2.00, 0.47))
@@ -24,18 +25,16 @@ for each pixel (Px, Py) on the screen do
     plot(Px, Py, color)
     */
 
+//Function from online source https://dirask.com/posts/JavaScript-how-to-draw-pixel-on-canvas-element-n1e7Wp
 function drawPixel(stuff, x, y, color) {
     var roundedX = Math.round(x);
     var roundedY = Math.round(y);
     stuff.fillStyle = color || '#000';
   	stuff.fillRect(roundedX, roundedY, 1, 1);
 }
-/*
-for(var i = 0; i < screen.width; i++) {
-    drawPixel(ctx, i, 20, 'black');
-}
-*/
 
+
+//Referenced using Wikipedia's pseudocode
 function drawMandelbrot(tolerance) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for(var Px = 0; Px < width; Px++) {
